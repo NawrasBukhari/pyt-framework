@@ -31,7 +31,7 @@ file_name = f"{date}_{name}.py"
 file_path = os.path.join(path, file_name)
 # create the migration script file
 stub = open(file_path, "w+")
-stub.write('from Database import Query\n\n\nQuery("")\n\nif __name__ == "__main__":\n\tpass')
+stub.write('from Core.Database import Query\n\n\nQuery("")\n\nif __name__ == "__main__":\n\tpass')
 stub.close()
 # print the migration script file path
 print(Back.GREEN + f"Migration script created at {file_path}", Style.RESET_ALL)
