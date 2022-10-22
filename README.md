@@ -6,7 +6,10 @@ A very simple Python Tkinter template which is being under development stage rig
 ```bash
 python installer.py
 ```
-
+# Creating Model & More
+```bash
+python wizard.py --help
+```
 # License
 MIT License
 
