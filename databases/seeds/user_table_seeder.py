@@ -9,7 +9,7 @@ class UserTableSeeder(Seeder):
     def run(self):
         """Run the database seeds."""
         User.create(
-            name="John Doe",
+            name="admin",
             email="user@pyt.com",
             password=hash_password("password"),
             role="user",

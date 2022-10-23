@@ -10,9 +10,9 @@ class CreateUsersTable(Migration):
         """
         with self.schema.create("users") as table:
             table.increments("id").primary()
-            table.string("name", length=191)
-            table.string("email", length=191).unique()
-            table.string("password", length=191)
+            table.string("name", length=191, nullable=False).unique()
+            table.string("email", length=191, nullable=True)
+            table.string("password", length=191, nullable=False)
             table.string("remember_token", length=191, nullable=True)
             table.string("role", length=191, nullable=True).default("user")
             table.timestamps()
