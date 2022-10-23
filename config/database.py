@@ -26,8 +26,10 @@ DATABASES = {
         "password": get_env("DATABASE_PASSWORD"),
         "port":     get_env("DATABASE_PORT"),
         "log_queries": False,
+        "strict": True,
+        "engine": "InnoDB",
         "options": {
-            #
+
         }
     }
 }
