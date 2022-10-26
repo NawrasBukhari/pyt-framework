@@ -1,5 +1,5 @@
 """ User Model """
-from masoniteorm.models import Model
+from orm.models import Model
 
 
 class User(Model):

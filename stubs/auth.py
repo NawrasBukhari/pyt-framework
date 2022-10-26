@@ -1,16 +1,17 @@
 from config.helpers import login, register
 from app.User import User
+from getpass import getpass
 
 
 def login_form():
     username = input("Enter your username: ")
-    password = input("Enter your password: ")
+    password = getpass("Enter your password: ")
     login(User, username, password)
 
 
 def register_form():
     username = input("Enter your username: ")
-    password = input("Enter your password: ")
+    password = getpass("Enter your password: ")
     register(model=User, user_name=username, user_password=password)
 
 

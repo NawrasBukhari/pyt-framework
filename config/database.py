@@ -1,4 +1,4 @@
-from masoniteorm.connections import ConnectionResolver as Connection
+from orm.connections import ConnectionResolver as Connection
 
 from config.environment import get_env
 

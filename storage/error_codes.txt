@@ -1,3 +1,0 @@
-exit code 100: Connection to database failed try to change the database connection settings in the Environment.py file and retry.
-exit code 101: Selecting had a problem with the tables, either no data exists or the tables are not there. Try to run the create tables script and retry.
-exit code 102: Inserting data was wrong, or table does not exist, if you are using a new database, you have to create the tables first.

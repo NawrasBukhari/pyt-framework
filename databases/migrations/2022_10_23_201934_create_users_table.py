@@ -1,6 +1,6 @@
 """CreateUsersTable Migration."""
 
-from masoniteorm.migrations import Migration
+from orm.migrations import Migration
 
 
 class CreateUsersTable(Migration):

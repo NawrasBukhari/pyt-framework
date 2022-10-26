@@ -1,6 +1,6 @@
 """UserTableSeeder Seeder."""
 
-from masoniteorm.seeds import Seeder
+from orm.seeds import Seeder
 from app.User import User
 from config.security import hash_password
 
