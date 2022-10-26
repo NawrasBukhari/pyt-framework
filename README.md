@@ -4,12 +4,9 @@ A very simple Python Tkinter template which is being under development stage rig
 # Installation
 
 ```bash
-python installer.py
+python setup.py install
 ```
-# Creating Model & More
-```bash
-python wizard.py --help
-```
+
 # License
 MIT License
 
