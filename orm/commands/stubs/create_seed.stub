@@ -2,6 +2,19 @@
 
 from orm.seeds import Seeder
 
+"""
+seeders are used to populate the database with data
+    @param {Model} model - the model to seed
+        :example
+        class UserSeeder(Seeder):
+            def run(self):
+                self.model.create({
+                    'name': 'John Doe',
+                    'email': 'user@pyt.com'
+                })
+
+"""
+
 
 class __SEEDER_NAME__(Seeder):
     def run(self):

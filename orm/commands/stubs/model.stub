@@ -2,6 +2,16 @@
 
 from orm.models import Model
 
+"""
+Here we define the model for the table 'whatever'
+__table__ is the name of the table
+__fillable__ is the list of the columns that can be filled
+__hidden__ is the list of the columns that can't be filled
+__timestamps__ is a boolean that indicates if the table has the columns created_at and updated_at
+__soft_delete__ is a boolean that indicates if the table has the column deleted_at
+__primary_key__ is the name of the primary key if was changed from the default 'id'
+"""
+
 
 class __CLASS__(Model):
     """__CLASS__ Model"""

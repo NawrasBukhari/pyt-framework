@@ -2,6 +2,32 @@
 
 from orm.migrations import Migration
 
+"""
+    @param name: The name of the table.
+    @param length: The length of the string preferred (255).
+    @param nullable: Whether the field can be null or not.
+    @param default: The default value of the field.
+    @param unique: Whether the field is unique or not.
+    @param primary_key: Whether the field is the primary key or not.
+    @param index: Whether the field is indexed or not.
+    @param foreign_key: The foreign key of the field.
+    @param on_delete: The action to take when the foreign key is deleted.
+    @param on_update: The action to take when the foreign key is updated.
+    @param check: The check constraint of the field.
+    @param collation: The collation of the field.
+    @param comment: The comment of the field.
+    @param auto_increment: Whether the field is auto incrementing or not.
+    @param unsigned: Whether the field is unsigned or not.
+    @param zerofill: Whether the field is zerofill or not.
+    @param binary: Whether the field is binary or not.
+    @param charset: The charset of the field.
+    @param engine: The engine of the table.
+    @param charset: The charset of the table.
+    @param collation: The collation of the table.
+    @param comment: The comment of the table.
+    @param row_format: The row format of the table.
+"""
+
 
 class __MIGRATION_NAME__(Migration):
     def up(self):
