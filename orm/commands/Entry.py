@@ -7,34 +7,34 @@ successfully import commands for you.
 
 from cleo import Application
 from . import (
-    MigrateCommand,
-    MigrateRollbackCommand,
-    MigrateRefreshCommand,
-    MakeMigrationCommand,
-    MakeModelCommand,
-    MakeModelDocstringCommand,
-    MakeObserverCommand,
-    MigrateStatusCommand,
-    MigrateResetCommand,
-    MakeSeedCommand,
-    SeedRunCommand,
-    ShellCommand,
+    MakeModelDocstringCommand as MakeModelDocstring,
+    MigrateRollbackCommand as MigrateRollback,
+    MigrateRefreshCommand as MigrateRefresh,
+    MakeMigrationCommand as MakeMigration,
+    MigrateStatusCommand as MigrateStatus,
+    MakeObserverCommand as MakeObserver,
+    MigrateResetCommand as MigrateReset,
+    MakeModelCommand as MakeModel,
+    MakeSeedCommand as MakeSeed,
+    MigrateCommand as Migrate,
+    SeedRunCommand as SeedRun,
+    ShellCommand as Shell,
 )
 
-application = Application("ORM Version:", 0.1)
+application = Application("ORM:", str(0.1))
 
-application.add(MigrateCommand())
-application.add(MigrateRollbackCommand())
-application.add(MigrateRefreshCommand())
-application.add(MakeMigrationCommand())
-application.add(MakeModelCommand())
-application.add(MakeModelDocstringCommand())
-application.add(MakeObserverCommand())
-application.add(MigrateResetCommand())
-application.add(MigrateStatusCommand())
-application.add(MakeSeedCommand())
-application.add(SeedRunCommand())
-application.add(ShellCommand())
+application.add(MakeModelDocstring())
+application.add(MigrateRollback())
+application.add(MigrateRefresh())
+application.add(MakeMigration())
+application.add(MigrateStatus())
+application.add(MakeObserver())
+application.add(MigrateReset())
+application.add(MakeModel())
+application.add(MakeSeed())
+application.add(Migrate())
+application.add(SeedRun())
+application.add(Shell())
 
 if __name__ == "__main__":
     application.run()

@@ -1,6 +1,5 @@
 import os
 import shutil
-
 from setuptools import setup, glob
 from setuptools.command.install import install as _install
 
@@ -24,12 +23,13 @@ class install(_install):
         print("You are ready to go!\nDo some magic by writing 'pyt' in the terminal!")
 
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+with open("README.md", "r") as readme:
+    long_description = readme.read()
 
 setup(
     name="pyt-wizard",
     version="1.0.0",
+    python_requires=">=3.9",
     package_dir={"": "orm"},
     description="The Official Masonite ORM",
     long_description=long_description,
@@ -39,7 +39,7 @@ setup(
     author_email="nawrasbukhari@hotmail.com",
     license="MIT",
     include_package_data=True,
-    package_data={'': ['*.stub']},
+    package_data={"": ["*.stub", "*.html"]},
     install_requires=[
         "inflection>=0.3,<0.6",
         "faker>=4.1.0,<14.0",
@@ -76,12 +76,12 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
 
+
     keywords="PY-Template, Python, ORM",
 
     packages=[
         "collection",
         "commands",
-        "commands.stubs",
         "connections",
         "expressions",
         "factories",
@@ -90,7 +90,6 @@ setup(
         "models",
         "observers",
         "pagination",
-        "providers",
         "query",
         "query.grammars",
         "query.processors",
@@ -99,7 +98,6 @@ setup(
         "schema.platforms",
         "scopes",
         "seeds",
-        "testing",
     ],
 
     entry_points={

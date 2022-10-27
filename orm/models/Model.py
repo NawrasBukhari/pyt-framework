@@ -15,7 +15,7 @@ from orm.scopes import TimeStampsMixin
 from orm.config import load_config
 from orm.exceptions import ModelNotFound
 
-"""This is a magic class that will help using models like User.first() instead of having to instatiate a class like
+"""This is a magic class that will help using models like User.first() instead of having to instantiate a class like
 User().first()
 """
 
@@ -28,7 +28,7 @@ class ModelMeta(type):
 
         User().where(..)
 
-        and instead, with this class inherited as a meta class, we can do this:
+        and instead, with this class inherited as a metaclass, we can do this:
 
         User.where(...)
 

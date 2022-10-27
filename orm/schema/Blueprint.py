@@ -43,6 +43,15 @@ class Blueprint:
 
         return self
 
+    def remember_token(self, column="remember_token", length=100, nullable=True):
+        """Sets a column to be to remember token representation for the table.
+
+        Returns:
+            self
+        """
+        self.string(column, length, nullable)
+        return self
+
     def tiny_integer(self, column, length=1, nullable=False):
         """Sets a column to be the tiny_integer representation for the table.
 

@@ -1,4 +1,4 @@
-from ..helpers.misc import deprecated
+from orm.helpers.misc import deprecated
 
 
 class QueryExpression:

@@ -1,3 +1,5 @@
+import os
+
 from config.security import verify_password, hash_password
 from config.validator import validate_password, required
 
@@ -49,14 +51,14 @@ def register(model, user_name, user_password):
 
 
 """
-This function is used to login user to the application
-by calling the login function from the helpers.py file
-validation is done in the validator.py file
-@:param model
-@:param user_name
-@:param user_password
-for example:
-login(User, "John Doe", "Password123!")
+    This function is used to login user to the application
+    by calling the login function from the helpers.py file
+    validation is done in the validator.py file
+    @:param model
+    @:param user_name
+    @:param user_password
+    for example:
+    login(User, "John Doe", "Password123!")
 """
 
 
@@ -73,6 +75,10 @@ def login(model, user_name, user_password):
 
     except AttributeError:
         print("These credentials do not match our records.")
+
+
+def get_mail_template_path(file_name, file_extension):
+    return os.path.join(os.getcwd(), "storage", file_name + "." + file_extension)
 
 
 def update_credentials():

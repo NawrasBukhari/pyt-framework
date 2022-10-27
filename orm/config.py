@@ -78,7 +78,7 @@ def db_url(database_url=None, prefix="", options={}, log_queries=False):
         if "?" in path and not url.query:
             path, _ = path.split("?", 2)
 
-        # if we are using sqlite and we have no path, then assume we
+        # if we are using sqlite, and we have no path, then assume we
         # want an in-memory database (this is the behaviour of sqlalchemy)
         if url.scheme == "sqlite" and path == "":
             path = ":memory:"

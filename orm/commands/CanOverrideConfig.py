@@ -12,5 +12,6 @@ class CanOverrideConfig(Command):
             "config",
             "C",
             8,
-            description="The path to the ORM configuration file. If not given DB_CONFIG_PATH env variable will be used and finally 'config.database'.",
+            description="The path to the ORM configuration file. If not given DB_CONFIG_PATH env variable will be "
+                        "used and finally 'config.database'.",
         )

@@ -7,7 +7,7 @@ from colorama import Back
     @Github:        https://github.com/NawrasBukhari
     @Date:          22/Oct/2022
     @LastEditors:   Nawras Bukhari
-    @LastEditTime:  22/Oct/2022
+    @LastEditTime:  27/Oct/2022
 """
 
 """
@@ -17,6 +17,7 @@ from colorama import Back
 """
 # Application status
 APP_DEBUG = "True"
+APP_ENVIRONMENT = "development"
 
 # Database credentials
 DATABASE_DRIVER = "mysql"
@@ -29,13 +30,13 @@ DATABASE_PORT = "3306"
 
 # Mail credentials
 MAIL_MAILER = "smtp"
-MAIL_HOST = "mailhog"
-MAIL_PORT = "1025"
+MAIL_HOST = "smtp.gmail.com"
+MAIL_PORT = "587"
 MAIL_USERNAME = "null"
 MAIL_PASSWORD = "null"
-MAIL_ENCRYPTION = "null"
+MAIL_ENCRYPTION = "TLS"
 MAIL_FROM_ADDRESS = "hello@example.com"
-MAIL_FROM_NAME = "APP_NAME"
+MAIL_FROM_NAME = "PY Template"
 
 # API credentials
 API_ENDPOINT = "https://example.com/api"
@@ -64,6 +65,7 @@ os.environ["MAIL_FROM_ADDRESS"] = str(MAIL_FROM_ADDRESS)
 os.environ["MAIL_FROM_NAME"] = str(MAIL_FROM_NAME)
 os.environ["API_ENDPOINT"] = str(API_ENDPOINT)
 os.environ["APP_DEBUG"] = str(APP_DEBUG)
+os.environ["APP_ENVIRONMENT"] = str(APP_ENVIRONMENT)
 """
     Here we are using the os.environ dictionary to get the value of the environment variable.
     If the environment variable is not set, we raise an exception.
@@ -77,7 +79,11 @@ def get_env(name):
         return os.environ[name]
     except KeyError:
         message = Back.RED + "Expected environment variable '{}' not set.".format(name)
-        if get_env("APP_DEBUG") == "True":
+        if is_debug() is True:
             raise Exception(message)
         else:
             exit()
+
+
+def is_debug():
+    return get_env("APP_DEBUG") == "True"
