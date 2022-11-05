@@ -112,22 +112,19 @@ def register(model, user_name, user_password):
             if required(user_name) is True and required(user_password) is True:
 
                 if validate_password(user_password) is True:
-
                     password = hash_password(user_password)
                     model.create({"name": user_name, "password": password})
-                    print("User " + user_name + " created successfully!")
+                    return True
 
                 else:
-                    print(
-                        "Error Password must be at least 8 characters long and contain at least one uppercase letter, "
-                        "one lowercase letter, one digit and one symbol.")
+                    return False
             else:
-                print("Error Username and password are required.")
+                return False
         else:
-            print("User already exists")
+            return False
 
     except AttributeError:
-        print("Error! Could not create user")
+        return False
 ```
 
 ## How does login works?
@@ -143,12 +140,12 @@ def login(model, user_name, user_password):
         password = model_class.password.replace(" ", "")
 
         if name == user_name and verify_password(password=user_password, hashed_password=password) is True:
-            print("Welcome " + model_class.name)
+            return True
         else:
-            print("Wrong password")
+            return False
 
     except AttributeError:
-        print("These credentials do not match our records.")
+        return False
 ```
 
 # Security and validation
@@ -235,7 +232,7 @@ class User(Model):
     __primary_key__ = 'id'
     __fillable__ = ['name', 'email', 'password', 'role']
     __timestamps__ = True
-    __hidden__ = ['password', 'role']
+    __hidden__ = ['password', 'role', 'created_at', 'updated_at', 'remember_token']
 ```
 where: </br>
 ```__table__``` is the name of the table in the database </br>
@@ -243,6 +240,34 @@ where: </br>
 ```__fillable__``` is the columns that can be filled by the user </br> 
 ```__timestamps__``` is the columns that will be filled automatically by the orm </br> 
 ```__hidden__``` is the columns that will not be shown to the user </br>
+
+# API
+### You can easy implement api requests using the database by the following example
+```python
+from fastapi import FastAPI, responses
+from config.helpers import login, register
+
+from app.User import User
+
+app = FastAPI(debug=True)
+
+
+@app.post("/api/users/register", status_code=201)
+async def register_users(name: str, password: str):
+    if register(User, name, password) is True:
+        return responses.Response(content="User has been created successfully!", status_code=201)
+    else:
+        return responses.Response(content="Strong password needed or name is taken!", status_code=400)
+
+
+@app.post("/api/users/login", status_code=200)
+async def login_users(name: str, password: str):
+    if login(model=User, user_name=name, user_password=password) is True:
+        return responses.JSONResponse(content="Login successfully!", status_code=200)
+    else:
+        return responses.JSONResponse(content="These credentials do not match our records.", status_code=401)
+
+```
 
 # Generate classes
 ### You can setup the project by running the following commands
