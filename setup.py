@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import shutil
 from setuptools import setup, glob
@@ -59,6 +60,7 @@ setup(
         "python-dotenv==0.14.0",
         "pyodbc",
         "pendulum>=2.1,<2.2",
+        "fastapi==0.86.0",
     ],
 
     classifiers=[
@@ -75,7 +77,6 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-
 
     keywords="PY-Template, Python, ORM",
 

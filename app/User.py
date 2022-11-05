@@ -1,5 +1,5 @@
 """ User Model """
-from orm.models import Model
+from ..orm.models import Model
 
 
 class User(Model):
@@ -8,4 +8,4 @@ class User(Model):
     __primary_key__ = 'id'
     __fillable__ = ['name', 'email', 'password', 'role']
     __timestamps__ = True
-    __hidden__ = ['password', 'role']
+    __hidden__ = ['password', 'role', 'created_at', 'updated_at', 'remember_token']

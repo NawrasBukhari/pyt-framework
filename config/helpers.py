@@ -1,7 +1,5 @@
-import os
-
-from config.security import verify_password, hash_password
-from config.validator import validate_password, required
+from .security import verify_password, hash_password
+from .validator import validate_password, required
 
 """
     @Author:        Nawras Bukhari
@@ -9,10 +7,11 @@ from config.validator import validate_password, required
     @Github:        https://github.com/NawrasBukhari
     @Date:          24/Oct/2024
     @LastEditors:   Nawras Bukhari
-    @LastEditTime:  22/Oct/2022
+    @LastEditTime:  06/Nov/2022
 """
 
 """
+    ** Password must be at least 8 characters long and contain at least one number, one uppercase and one lowercase letter **
     This function is used to add a new user to the database
     by calling the register function from the helpers.py file
     validation is done in the validator.py file
@@ -32,22 +31,19 @@ def register(model, user_name, user_password):
             if required(user_name) is True and required(user_password) is True:
 
                 if validate_password(user_password) is True:
-
                     password = hash_password(user_password)
                     model.create({"name": user_name, "password": password})
-                    print("User " + user_name + " created successfully!")
+                    return True
 
                 else:
-                    print(
-                        "Error Password must be at least 8 characters long and contain at least one uppercase letter, "
-                        "one lowercase letter, one digit and one symbol.")
+                    return False
             else:
-                print("Error Username and password are required.")
+                return False
         else:
-            print("User already exists")
+            return False
 
     except AttributeError:
-        print("Error! Could not create user")
+        return False
 
 
 """
@@ -69,21 +65,19 @@ def login(model, user_name, user_password):
         password = model_class.password.replace(" ", "")
 
         if name == user_name and verify_password(password=user_password, hashed_password=password) is True:
-            print("Welcome " + model_class.name)
+            return True
         else:
-            print("Wrong password")
+            return False
 
     except AttributeError:
-        print("These credentials do not match our records.")
+        return False
 
 
-def get_mail_template_path(file_name, file_extension):
-    return os.path.join(os.getcwd(), "storage", file_name + "." + file_extension)
 
-
-def update_credentials():
+def update_credentials(model, user_name, user_password):
     # TODO: Update user credentials
     pass
+
 
 
 def reset_password():
