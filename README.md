@@ -9,23 +9,40 @@ python setup.py install
 # Quick start
 ### Environment variables for PYT are placed in the file `config/environment.py` and I have made a sample file named ```config/environment.example``` for you to see how it works. You can copy the file and rename it to `environment.py` and then you can change the variables to your own.
 ```python
-import os
 from colorama import Back
+import os
 
-# Application status
+"""
+    @Author:        Nawras Bukhari
+    @Description:   This script is used to get the environment variables
+    @Github:        https://github.com/NawrasBukhari
+    @Date:          22/Oct/2022
+    @LastEditors:   Nawras Bukhari
+    @LastEditTime:  11/Nov/2022
+"""
+
+"""
+    Variables that are set in the environment are available to the program.
+    Define what ever variables you need in the environment and then use them
+    in the program.
+"""
+
+""" Application variables """
+APP_KEY = "2d1046b3501bc8e84454e0b3986e55b9a44c72ca5a4eecc54c5227a4398d29b6"
+APP_ALGORITHM = "HS256"
 APP_DEBUG = "True"
 APP_ENVIRONMENT = "development"
 
-# Database credentials
+""" Database variables """
 DATABASE_DRIVER = "mysql"
 DATABASE_PREFIX = ""
 DATABASE_HOST = "localhost"
-DATABASE_NAME = "python"
+DATABASE_NAME = "api"
 DATABASE_USER = "root"
 DATABASE_PASSWORD = ""
 DATABASE_PORT = "3306"
 
-# Mail credentials
+""" Mail credentials """
 MAIL_MAILER = "smtp"
 MAIL_HOST = "smtp.gmail.com"
 MAIL_PORT = "587"
@@ -35,29 +52,42 @@ MAIL_ENCRYPTION = "TLS"
 MAIL_FROM_ADDRESS = "hello@example.com"
 MAIL_FROM_NAME = "PY Template"
 
-# API credentials
-API_ENDPOINT = "https://example.com/api"
+"""
+    Here we are using the os.environ dictionary to get the value of the environment variable.
+    If the environment variable is not set, we raise an exception.
+    @see https://docs.python.org/3/library/os.html#os.environ
+    @see https://docs.python.org/3/library/os.html#os.environ.get
+    @see https://docs.python.org/3/library/os.html#os.environ.setdefault
+"""
+os.environ["DATABASE_DRIVER"] = str(DATABASE_DRIVER)
+os.environ["DATABASE_PREFIX"] = str(DATABASE_PREFIX)
+os.environ["DATABASE_HOST"] = str(DATABASE_HOST)
+os.environ["DATABASE_NAME"] = str(DATABASE_NAME)
+os.environ["DATABASE_USER"] = str(DATABASE_USER)
+os.environ["DATABASE_PASSWORD"] = str(DATABASE_PASSWORD)
+os.environ["DATABASE_PORT"] = str(DATABASE_PORT)
+os.environ["MAIL_MAILER"] = str(MAIL_MAILER)
+os.environ["MAIL_HOST"] = str(MAIL_HOST)
+os.environ["MAIL_PORT"] = str(MAIL_PORT)
+os.environ["MAIL_USERNAME"] = str(MAIL_USERNAME)
+os.environ["MAIL_PASSWORD"] = str(MAIL_PASSWORD)
+os.environ["MAIL_ENCRYPTION"] = str(MAIL_ENCRYPTION)
+os.environ["MAIL_FROM_ADDRESS"] = str(MAIL_FROM_ADDRESS)
+os.environ["MAIL_FROM_NAME"] = str(MAIL_FROM_NAME)
+os.environ["APP_DEBUG"] = str(APP_DEBUG)
+os.environ["APP_ENVIRONMENT"] = str(APP_ENVIRONMENT)
+os.environ["APP_KEY"] = str(APP_KEY)
+os.environ["APP_ALGORITHM"] = str(APP_ALGORITHM)
 
-os.environ["DATABASE_DRIVER"]   =   str(DATABASE_DRIVER)
-os.environ["DATABASE_PREFIX"]   =   str(DATABASE_PREFIX)
-os.environ["DATABASE_HOST"]     =   str(DATABASE_HOST)
-os.environ["DATABASE_NAME"]     =   str(DATABASE_NAME)
-os.environ["DATABASE_USER"]     =   str(DATABASE_USER)
-os.environ["DATABASE_PASSWORD"] =   str(DATABASE_PASSWORD)
-os.environ["DATABASE_PORT"]     =   str(DATABASE_PORT)
-os.environ["MAIL_MAILER"]       =   str(MAIL_MAILER)
-os.environ["MAIL_HOST"]         =   str(MAIL_HOST)
-os.environ["MAIL_PORT"]         =   str(MAIL_PORT)
-os.environ["MAIL_USERNAME"]     =   str(MAIL_USERNAME)
-os.environ["MAIL_PASSWORD"]     =   str(MAIL_PASSWORD)
-os.environ["MAIL_ENCRYPTION"]   =   str(MAIL_ENCRYPTION)
-os.environ["MAIL_FROM_ADDRESS"] =   str(MAIL_FROM_ADDRESS)
-os.environ["MAIL_FROM_NAME"]    =   str(MAIL_FROM_NAME)
-os.environ["API_ENDPOINT"]      =   str(API_ENDPOINT)
-os.environ["APP_DEBUG"]         =   str(APP_DEBUG)
-os.environ["APP_ENVIRONMENT"]   =   str(APP_ENVIRONMENT)
+"""
+    This env() function is used to get the value of the environment variable.
+    If the environment variable is not set, we raise an exception.
+    @see https://docs.python.org/3/library/os.html#os.environ
+    @:param name The name of the environment variable
+"""
 
-def get_env(name):
+
+def env(name):
     try:
         return os.environ[name]
     except KeyError:
@@ -68,8 +98,11 @@ def get_env(name):
             exit()
 
 
+""" This is_debug() function is used to check if the application is in debug mode. """
+
+
 def is_debug():
-    return get_env("APP_DEBUG") == "True"
+    return env("APP_DEBUG") == "True"
 
 ```
 # Login process
@@ -96,6 +129,41 @@ password = getpass("Enter your password: ")
 register(model=User, user_name=username, user_password=password)
 ```
 
+# API Register
+```python
+from fastapi import FastAPI, responses
+from app.User import User
+from config.helpers import signJWT, register
+
+app = FastAPI(debug=True)
+
+
+@app.post("/api/users/register", status_code=201)
+async def register_users(name: str, password: str):
+    if register(User, name, password) is True:
+        return signJWT(name)
+    else:
+        return responses.Response(content="Strong password needed or name is taken!", status_code=400)
+
+```
+
+# API Login
+```python
+from fastapi import FastAPI, responses, Depends
+from app.User import User
+from config.helpers import Bearer, signJWT, login
+
+app = FastAPI(debug=True)
+
+@app.post("/api/users/login", dependencies=[Depends(Bearer())], status_code=200)
+async def login_users(name: str, password: str):
+    if login(model=User, user_name=name, user_password=password) is True:
+        return signJWT(name)
+    else:
+        return responses.JSONResponse(content="These credentials do not match our records or no token was found!",
+                                      status_code=401)
+
+```
 ## How does registration works?
 The register function takes 3 arguments which are ```model```, ```user_name``` and ```user_password``` so if we want to signin we have to make query to the database, the orm takes care of this step by not using the boring sql syntax's, and it deals with the database in a very simple way
 
@@ -151,7 +219,7 @@ def login(model, user_name, user_password):
         print("These credentials do not match our records.")
 ```
 
-# Security and validation
+# Security
 ## Password hashing
 I have used argon2 since it is considered now one of the strongest password hashing algorithms libraries, it is very simple, and it generates random salt for each password which we can avoid human predictable passwords.
 ```python
@@ -233,9 +301,9 @@ class User(Model):
     """User Model"""
     __table__ = 'users'
     __primary_key__ = 'id'
-    __fillable__ = ['name', 'email', 'password', 'role']
+    __fillable__ = ['name', 'email', 'password', 'role', 'token']
     __timestamps__ = True
-    __hidden__ = ['password', 'role']
+    __hidden__ = ['password', 'role', 'created_at', 'updated_at', 'remember_token', 'token']
 ```
 where: </br>
 ```__table__``` is the name of the table in the database </br>
@@ -264,7 +332,8 @@ GLOBAL OPTIONS
   -n (--no-interaction)  Do not ask any interactive question
 
 AVAILABLE COMMANDS
-  help                   Display the manual of a command
+  help                   Display the manual of a command.
+  key:generate           Generates a new application key.
   migrate                Run migrations.
   migrate:refresh        Rolls back migrations and migrates them again.
   migrate:reset          Reset migrations.
@@ -279,6 +348,207 @@ AVAILABLE COMMANDS
   shell                  Connect to your database interactive terminal.
 
 ```
+# Helpers file
+### You can find the helpers file in ```app/helpers.py``` and you can add your own helpers in this file
+```python
+import os.path
+
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Request, HTTPException
+from typing import Dict
+import time
+import jwt
+from .security import verify_password, hash_password, validate_password, required
+from .environment import env
+
+"""
+    @Author:        Nawras Bukhari
+    @Description:   This script is used to provide a quick access to another scripts
+    @Github:        https://github.com/NawrasBukhari
+    @Date:          24/Oct/2024
+    @LastEditors:   Nawras Bukhari
+    @LastEditTime:  07/Nov/2022
+"""
+
+"""
+    ** Password must be at least 8 characters long and contain at least one number, one uppercase and one lowercase letter **
+    This function is used to add a new user to the database
+    by calling the register function from the helpers.py file
+    validation is done in the validator.py file
+    @:param model
+    @:param user_name
+    @:param user_password
+    for example:
+    register(User, "John Doe", "Password123!")
+"""
+
+
+def find_file(file_name: str) -> str:
+    file_path = os.path.join(os.path.dirname(__file__), file_name)
+    return file_path
+
+
+def register(model, user_name, user_password):
+    try:
+        model_class = model.where("name", user_name).first()
+        if model_class is None:
+
+            if required(user_name) is True and required(user_password) is True:
+
+                if validate_password(user_password) is True:
+                    password = hash_password(user_password)
+                    model.create({"name": user_name, "password": password})
+                    return True
+
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False
+
+    except AttributeError:
+        return False
+
+
+"""
+    This function is used to login user to the application
+    by calling the login function from the helpers.py file
+    validation is done in the validator.py file
+    @:param model
+    @:param user_name
+    @:param user_password
+    for example:
+    login(User, "John Doe", "Password123!")
+"""
+
+
+def login(model, user_name, user_password):
+    try:
+        model_class = model.where("name", user_name).first()
+        name = model_class.name.replace(" ", "")
+        password = model_class.password.replace(" ", "")
+
+        if name == user_name and verify_password(password=user_password, hashed_password=password) is True:
+            return True
+        else:
+            return False
+
+    except AttributeError:
+        return False
+
+
+def update_credentials(model, user_name, user_password):
+    # TODO: Update user credentials
+    pass
+
+
+def reset_password():
+    # TODO: Reset user password
+    pass
+
+
+def logout():
+    # TODO: Logout user
+    pass
+
+
+"""
+    This token_response() is used to return the token to the user
+    @:param token
+"""
+
+
+def token_response(token: str):
+    return {
+        "access_token": token
+    }
+
+
+"""
+    This signJWT() is used to sign the JWT token
+    which means creating it
+    @:param user_id
+    @:return token_response
+    Dictionary of the user_id and the expiration time
+    token_response() is called to return the token to the user
+"""
+
+
+def signJWT(user_id: str) -> Dict[str, str]:
+    payload = {
+        "user_id": user_id,
+        "expires": time.time() + 600
+    }
+    token = jwt.encode(payload=payload, key=env('APP_KEY'), algorithm=env('APP_ALGORITHM'))
+
+    return token_response(token)
+
+
+"""
+    This decodeJWT() is used to decode the JWT token
+    which means reading it
+    @:param token
+    @:return decoded_token
+    Dictionary of the user_id and the expiration time
+"""
+
+
+def decodeJWT(token: str) -> dict:
+    try:
+        decoded_token = jwt.decode(jwt=token, key=env('APP_KEY'), algorithms=[env('APP_ALGORITHM')])
+        return decoded_token if decoded_token["expires"] >= time.time() else None
+    except:
+        return {}
+
+
+"""
+    This verify_jwt() is used to verify the JWT token
+    which means checking if it is valid
+    @:param token
+    @:return isTokenValid
+    Boolean value of the token validity
+"""
+
+
+def verify_jwt(token: str) -> bool:
+    isTokenValid: bool = False
+
+    try:
+        payload = decodeJWT(token)
+    except:
+        payload = None
+    if payload:
+        isTokenValid = True
+    return isTokenValid
+
+
+"""
+    This Bearer() is extending the HTTPBearer class
+    which means it is inheriting from it
+    @:param credentials
+    @:return credentials
+    @:raise HTTPException
+    HTTPException is raised if the token is not valid
+"""
+
+
+class Bearer(HTTPBearer):
+    def __init__(self, auto_error: bool = True):
+        super(Bearer, self).__init__(auto_error=auto_error)
+
+    async def __call__(self, request: Request):
+        credentials: HTTPAuthorizationCredentials = await super(Bearer, self).__call__(request)
+        if credentials:
+            if not credentials.scheme == "Bearer":
+                raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
+            if not verify_jwt(credentials.credentials):
+                raise HTTPException(status_code=403, detail="Invalid token or expired token.")
+            return credentials.credentials
+        else:
+            raise HTTPException(status_code=403, detail="Invalid authorization code.")
+
+```
 
 # TODO
 - [x] Add more database drivers
@@ -291,6 +561,11 @@ AVAILABLE COMMANDS
 - [ ] Add more examples
 - [ ] Add more security
 - [ ] Add more validation
+
+# Known Issues
+- [ ] Relative imports are not working
+- [ ] Difference between the activated and the deactivated environments
+
 
 # License
 ```
