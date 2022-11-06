@@ -12,5 +12,5 @@ class UserTableSeeder(Seeder):
             name="admin",
             email="user@pyt.com",
             password=hash_password("password"),
-            role="user",
+            role="admin",
         )

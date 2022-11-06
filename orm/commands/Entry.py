@@ -4,8 +4,6 @@ This module is really used for backup only if the masonite CLI cannot import thi
 This can be used by running "python craft". This module is not ran when the CLI can
 successfully import commands for you.
 """
-
-from cleo import Application
 from . import (
     MakeModelDocstringCommand as MakeModelDocstring,
     MigrateRollbackCommand as MigrateRollback,
@@ -14,12 +12,15 @@ from . import (
     MigrateStatusCommand as MigrateStatus,
     MakeObserverCommand as MakeObserver,
     MigrateResetCommand as MigrateReset,
+    GenerateKeyCommand as GenerateKey,
     MakeModelCommand as MakeModel,
     MakeSeedCommand as MakeSeed,
     MigrateCommand as Migrate,
     SeedRunCommand as SeedRun,
     ShellCommand as Shell,
 )
+
+from cleo import Application
 
 application = Application("ORM:", str(0.1))
 
@@ -31,6 +32,7 @@ application.add(MigrateStatus())
 application.add(MakeObserver())
 application.add(MigrateReset())
 application.add(MakeModel())
+application.add(GenerateKey())
 application.add(MakeSeed())
 application.add(Migrate())
 application.add(SeedRun())

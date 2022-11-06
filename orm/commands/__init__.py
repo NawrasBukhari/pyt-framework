@@ -15,3 +15,4 @@ from .MakeMigrationCommand import MakeMigrationCommand
 from .MakeSeedCommand import MakeSeedCommand
 from .SeedRunCommand import SeedRunCommand
 from .ShellCommand import ShellCommand
+from .GenerateKeyCommand import GenerateKeyCommand

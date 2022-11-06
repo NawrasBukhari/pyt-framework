@@ -26,9 +26,9 @@ class MakeSeedCommand(Command):
         stub_file = "create_seed"
 
         with open(
-            os.path.join(
-                pathlib.Path(__file__).parent.absolute(), f"stubs/{stub_file}.stub"
-            )
+                os.path.join(
+                    pathlib.Path(__file__).parent.absolute(), f"stubs/{stub_file}.stub"
+                )
         ) as fp:
             output = fp.read()
             output = output.replace("__SEEDER_NAME__", camelize(name))

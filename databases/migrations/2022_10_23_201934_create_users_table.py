@@ -14,6 +14,7 @@ class CreateUsersTable(Migration):
             table.string("email", length=191, nullable=True)
             table.string("password", length=191, nullable=False)
             table.string("remember_token", length=191, nullable=True)
+            table.string("token", length=191, nullable=True)
             table.string("role", length=191, nullable=True).default("user")
             table.timestamps()
 

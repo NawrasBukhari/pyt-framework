@@ -1,6 +1,5 @@
-from ..orm.connections import ConnectionResolver as Connection
-
-from .environment import get_env
+from orm.connections import ConnectionResolver as Connection
+from .environment import env
 
 """
     @Author:        Nawras Bukhari
@@ -8,7 +7,7 @@ from .environment import get_env
     @Github:        https://github.com/NawrasBukhari
     @Date:          22/Oct/2022
     @LastEditors:   Nawras Bukhari
-    @LastEditTime:  22/Oct/2022
+    @LastEditTime:  11/Nov/2022
 """
 
 """
@@ -19,12 +18,12 @@ from .environment import get_env
 DATABASES = {
     "default": "mysql",
     "mysql": {
-        "host": get_env("DATABASE_HOST"),
-        "driver": get_env("DATABASE_DRIVER"),
-        "database": get_env("DATABASE_NAME"),
-        "user": get_env("DATABASE_USER"),
-        "password": get_env("DATABASE_PASSWORD"),
-        "port": get_env("DATABASE_PORT"),
+        "host": env("DATABASE_HOST"),
+        "driver": env("DATABASE_DRIVER"),
+        "database": env("DATABASE_NAME"),
+        "user": env("DATABASE_USER"),
+        "password": env("DATABASE_PASSWORD"),
+        "port": env("DATABASE_PORT"),
         "log_queries": False,
         "strict": True,
         "engine": "InnoDB",

@@ -1,5 +1,5 @@
-import os
 from colorama import Back
+import os
 
 """
     @Author:        Nawras Bukhari
@@ -7,7 +7,7 @@ from colorama import Back
     @Github:        https://github.com/NawrasBukhari
     @Date:          22/Oct/2022
     @LastEditors:   Nawras Bukhari
-    @LastEditTime:  27/Oct/2022
+    @LastEditTime:  11/Nov/2022
 """
 
 """
@@ -15,11 +15,14 @@ from colorama import Back
     Define what ever variables you need in the environment and then use them
     in the program.
 """
-# Application status
+
+""" Application variables """
+APP_KEY = "2d1046b3501bc8e84454e0b3986e55b9a44c72ca5a4eecc54c5227a4398d29b6"
+APP_ALGORITHM = "HS256"
 APP_DEBUG = "True"
 APP_ENVIRONMENT = "development"
 
-# Database credentials
+""" Database variables """
 DATABASE_DRIVER = "mysql"
 DATABASE_PREFIX = ""
 DATABASE_HOST = "localhost"
@@ -28,7 +31,7 @@ DATABASE_USER = "root"
 DATABASE_PASSWORD = ""
 DATABASE_PORT = "3306"
 
-# Mail credentials
+""" Mail credentials """
 MAIL_MAILER = "smtp"
 MAIL_HOST = "smtp.gmail.com"
 MAIL_PORT = "587"
@@ -37,9 +40,6 @@ MAIL_PASSWORD = "null"
 MAIL_ENCRYPTION = "TLS"
 MAIL_FROM_ADDRESS = "hello@example.com"
 MAIL_FROM_NAME = "PY Template"
-
-# API credentials
-API_ENDPOINT = "https://example.com/api"
 
 """
     Here we are using the os.environ dictionary to get the value of the environment variable.
@@ -63,18 +63,20 @@ os.environ["MAIL_PASSWORD"] = str(MAIL_PASSWORD)
 os.environ["MAIL_ENCRYPTION"] = str(MAIL_ENCRYPTION)
 os.environ["MAIL_FROM_ADDRESS"] = str(MAIL_FROM_ADDRESS)
 os.environ["MAIL_FROM_NAME"] = str(MAIL_FROM_NAME)
-os.environ["API_ENDPOINT"] = str(API_ENDPOINT)
 os.environ["APP_DEBUG"] = str(APP_DEBUG)
 os.environ["APP_ENVIRONMENT"] = str(APP_ENVIRONMENT)
+os.environ["APP_KEY"] = str(APP_KEY)
+os.environ["APP_ALGORITHM"] = str(APP_ALGORITHM)
+
 """
-    Here we are using the os.environ dictionary to get the value of the environment variable.
+    This env() function is used to get the value of the environment variable.
     If the environment variable is not set, we raise an exception.
     @see https://docs.python.org/3/library/os.html#os.environ
     @:param name The name of the environment variable
 """
 
 
-def get_env(name):
+def env(name):
     try:
         return os.environ[name]
     except KeyError:
@@ -85,5 +87,8 @@ def get_env(name):
             exit()
 
 
+""" This is_debug() function is used to check if the application is in debug mode. """
+
+
 def is_debug():
-    return get_env("APP_DEBUG") == "True"
+    return env("APP_DEBUG") == "True"
