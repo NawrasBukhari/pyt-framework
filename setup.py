@@ -5,7 +5,7 @@ from setuptools import setup, glob
 from setuptools.command.install import install as _install
 
 
-class install(_install):
+class Install(_install):
     """Custom clean command to tidy up the project root."""
 
     CLEAN_FILES = './build ./dist ./*.pyc ./*.tgz ./*.egg-info ./orm/*.egg-info'.split(' ')
@@ -13,6 +13,7 @@ class install(_install):
     def run(self):
         _install.run(self)
         here = os.path.abspath(os.path.dirname(__file__))
+        env_file_location = os.path.abspath(os.path.dirname(__file__))
 
         for path_spec in self.CLEAN_FILES:
             abs_paths = glob.glob(os.path.normpath(os.path.join(here, path_spec)))
@@ -21,7 +22,17 @@ class install(_install):
                     raise ValueError("%s is not a path inside %s" % (path, here))
                 print('removing %s' % os.path.relpath(path))
                 shutil.rmtree(path)
-        print("You are ready to go!\nDo some magic by writing 'pyt' in the terminal!")
+        try:
+            env_file = os.path.join(env_file_location, ".env.example")
+            env_file_new = os.path.join(env_file_location, ".env")
+            # copy .env.example to .env if .env does not exist
+            shutil.copyfile(env_file, env_file_new)
+            print("Environment file copied successfully")
+        except Exception as e:
+            print("Environment file already exists\n", e)
+        os.system("pyt key:generate")
+        print("Application key generated successfully")
+        print("Installation completed successfully")
 
 
 with open("README.md", "r") as readme:
@@ -107,5 +118,7 @@ setup(
             "pyt = commands.Entry:application.run",
         ],
     },
-    cmdclass={'install': install}
+    cmdclass={
+        'install': Install,
+    }
 )

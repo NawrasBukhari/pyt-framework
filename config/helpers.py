@@ -2,7 +2,7 @@ import os.path
 
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Request, HTTPException
-from typing import Dict
+from typing import Any
 import time
 import jwt
 from .security import verify_password, hash_password, validate_password, required
@@ -12,10 +12,26 @@ from .environment import env
     @Author:        Nawras Bukhari
     @Description:   This script is used to provide a quick access to another scripts
     @Github:        https://github.com/NawrasBukhari
-    @Date:          24/Oct/2024
+    @Date:          24/Oct/2022
     @LastEditors:   Nawras Bukhari
     @LastEditTime:  07/Nov/2022
 """
+
+"""
+    This find_file() function is used to find the file path of the file.
+    when you call this function, you need to pass the file name as a parameter.
+    @:param file_name
+    @:return file_path
+"""
+
+
+def File(file_name: str) -> str | Exception:
+    try:
+        file_path = os.path.join(os.path.dirname(__file__), file_name)
+        return file_path
+    except Exception as e:
+        return e
+
 
 """
     ** Password must be at least 8 characters long and contain at least one number, one uppercase and one lowercase letter **
@@ -28,11 +44,6 @@ from .environment import env
     for example:
     register(User, "John Doe", "Password123!")
 """
-
-
-def find_file(file_name: str) -> str:
-    file_path = os.path.join(os.path.dirname(__file__), file_name)
-    return file_path
 
 
 def register(model, user_name, user_password):
@@ -85,21 +96,6 @@ def login(model, user_name, user_password):
         return False
 
 
-def update_credentials(model, user_name, user_password):
-    # TODO: Update user credentials
-    pass
-
-
-def reset_password():
-    # TODO: Reset user password
-    pass
-
-
-def logout():
-    # TODO: Logout user
-    pass
-
-
 """
     This token_response() is used to return the token to the user
     @:param token
@@ -122,14 +118,17 @@ def token_response(token: str):
 """
 
 
-def signJWT(user_id: str) -> Dict[str, str]:
-    payload = {
-        "user_id": user_id,
-        "expires": time.time() + 600
-    }
-    token = jwt.encode(payload=payload, key=env('APP_KEY'), algorithm=env('APP_ALGORITHM'))
+def signJWT(user_id: str) -> dict[str, str] | Exception:
+    try:
+        payload = {
+            "user_id": user_id,
+            "expires": time.time() + 600
+        }
+        token = jwt.encode(payload=payload, key=env("APP_KEY"), algorithm=env("HS256"))
 
-    return token_response(token)
+        return token_response(token)
+    except Exception as e:
+        return e
 
 
 """
@@ -141,12 +140,12 @@ def signJWT(user_id: str) -> Dict[str, str]:
 """
 
 
-def decodeJWT(token: str) -> dict:
+def decodeJWT(token: str) -> Exception | None | Any:
     try:
-        decoded_token = jwt.decode(jwt=token, key=env('APP_KEY'), algorithms=[env('APP_ALGORITHM')])
+        decoded_token = jwt.decode(jwt=token, key=env("APP_KEY"), algorithms=["HS256"])
         return decoded_token if decoded_token["expires"] >= time.time() else None
-    except:
-        return {}
+    except Exception as e:
+        return e
 
 
 """
@@ -185,12 +184,33 @@ class Bearer(HTTPBearer):
         super(Bearer, self).__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request):
-        credentials: HTTPAuthorizationCredentials = await super(Bearer, self).__call__(request)
-        if credentials:
-            if not credentials.scheme == "Bearer":
-                raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
-            if not verify_jwt(credentials.credentials):
-                raise HTTPException(status_code=403, detail="Invalid token or expired token.")
-            return credentials.credentials
-        else:
-            raise HTTPException(status_code=403, detail="Invalid authorization code.")
+        try:
+            credentials: HTTPAuthorizationCredentials = await super(Bearer, self).__call__(request)
+            if credentials:
+                if not credentials.scheme == "Bearer":
+                    raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
+                if not verify_jwt(credentials.credentials):
+                    raise HTTPException(status_code=403, detail="Invalid token or expired token.")
+                return credentials.credentials
+            else:
+                raise HTTPException(status_code=403, detail="Invalid authorization code.")
+        except HTTPException as e:
+            raise e
+
+
+"""TODO: Add more functions"""
+
+
+def update_credentials(model, user_name, user_password):
+    # TODO: Update user credentials
+    pass
+
+
+def reset_password():
+    # TODO: Reset user password
+    pass
+
+
+def logout():
+    # TODO: Logout user
+    pass
