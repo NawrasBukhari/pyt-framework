@@ -9,7 +9,7 @@ python setup.py install
 # Quick start
 ### 
 ### Environment variables for PYT are placed in the file `.env` in the root directory of the project
-```dotenv
+```bash
 # Application status
 APP_DEBUG="True"
 APP_ENVIRONMENT="development"
