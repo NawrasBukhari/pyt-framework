@@ -1,0 +1,6 @@
+<Files ~ "\.(env|env.example|py|gitattributes|gitignore|md|htaccess|git)$">
+     Order allow,deny
+     Deny from all
+</Files>
+
+

@@ -1,38 +1,45 @@
 #!/usr/bin/env python
-import os
-import shutil
+import os.path
+from shutil import rmtree, copyfile
 from setuptools import setup, glob
 from setuptools.command.install import install as _install
+from colorama import Fore, Style
 
 
 class Install(_install):
     """Custom clean command to tidy up the project root."""
 
     CLEAN_FILES = './build ./dist ./*.pyc ./*.tgz ./*.egg-info ./orm/*.egg-info'.split(' ')
+    ENV_FILENAME_OLD = ".env.example"
+    ENV_FILENAME_NEW = ".env"
+    ENV_FILE_LOCATION = os.path.abspath(os.path.dirname(__file__))
+    CURRENT_LOCATION = os.path.abspath(os.path.dirname(__file__))
+    CURRENT_PYTHON_VERSION = (3, 9)
 
-    def run(self):
-        _install.run(self)
-        here = os.path.abspath(os.path.dirname(__file__))
-        env_file_location = os.path.abspath(os.path.dirname(__file__))
+    if os.sys.version_info < CURRENT_PYTHON_VERSION:
+        print(Fore.RED + "Python version must be greater than 3.9" + Style.RESET_ALL)
+        os.sys.exit(1)
+    else:
 
-        for path_spec in self.CLEAN_FILES:
-            abs_paths = glob.glob(os.path.normpath(os.path.join(here, path_spec)))
-            for path in [str(p) for p in abs_paths]:
-                if not path.startswith(here):
-                    raise ValueError("%s is not a path inside %s" % (path, here))
-                print('removing %s' % os.path.relpath(path))
-                shutil.rmtree(path)
-        try:
-            env_file = os.path.join(env_file_location, ".env.example")
-            env_file_new = os.path.join(env_file_location, ".env")
-            # copy .env.example to .env if .env does not exist
-            shutil.copyfile(env_file, env_file_new)
-            print("Environment file copied successfully")
-        except Exception as e:
-            print("Environment file already exists\n", e)
-        os.system("pyt key:generate")
-        print("Application key generated successfully")
-        print("Installation completed successfully")
+        def run(self):
+            _install.run(self)
+            for path_spec in self.CLEAN_FILES:
+                abs_paths = glob.glob(os.path.normpath(os.path.join(self.CURRENT_LOCATION, path_spec)))
+                for path in [str(p) for p in abs_paths]:
+                    if not path.startswith(self.CURRENT_LOCATION):
+                        raise ValueError(
+                            Fore.LIGHTRED_EX + "%s is not a path inside %s" % (path, self.CURRENT_LOCATION))
+                    print(Fore.LIGHTGREEN_EX + 'removing %s' % os.path.relpath(path))
+                    rmtree(path)
+
+            env_file = os.path.join(self.ENV_FILE_LOCATION, self.ENV_FILENAME_OLD)
+            env_file_new = os.path.join(self.ENV_FILE_LOCATION, self.ENV_FILENAME_NEW)
+            copyfile(env_file, env_file_new)
+            print(Fore.LIGHTGREEN_EX + f"Environment file [{self.ENV_FILENAME_OLD}] "
+                                       f"file copied to [{self.ENV_FILENAME_NEW}] successfully!")
+            os.system("pyt key:generate")
+            print(Fore.LIGHTGREEN_EX + "Installation completed successfully!" + Style.RESET_ALL)
+            print(Fore.LIGHTGREEN_EX + "You are ready to go! write [pyt] in the terminal!" + Style.RESET_ALL)
 
 
 with open("README.md", "r") as readme:
@@ -72,7 +79,7 @@ setup(
         "pendulum>=2.1,<2.2",
         "fastapi==0.86.0",
         "uvicorn==0.19.0",
-        "PyJWT~=2.6.0,>=2.6.0",
+        "PyJWT~=2.6.0,>=2.6.0"
     ],
 
     classifiers=[
@@ -118,7 +125,5 @@ setup(
             "pyt = commands.Entry:application.run",
         ],
     },
-    cmdclass={
-        'install': Install,
-    }
+    cmdclass={'install': Install}
 )

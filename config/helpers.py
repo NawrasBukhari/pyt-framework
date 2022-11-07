@@ -7,6 +7,7 @@ import time
 import jwt
 from .security import verify_password, hash_password, validate_password, required
 from .environment import env
+from .language import TRANSLATIONS
 
 """
     @Author:        Nawras Bukhari
@@ -18,7 +19,7 @@ from .environment import env
 """
 
 """
-    This find_file() function is used to find the file path of the file.
+    This File() function is used to find the file path of the file.
     when you call this function, you need to pass the file name as a parameter.
     @:param file_name
     @:return file_path
@@ -34,66 +35,19 @@ def File(file_name: str) -> str | Exception:
 
 
 """
-    ** Password must be at least 8 characters long and contain at least one number, one uppercase and one lowercase letter **
-    This function is used to add a new user to the database
-    by calling the register function from the helpers.py file
-    validation is done in the validator.py file
-    @:param model
-    @:param user_name
-    @:param user_password
-    for example:
-    register(User, "John Doe", "Password123!")
+    This Lang() is used to get the language of the user
+    @:param key
+    @:param language
+    @:return TRANSLATIONS[language][key]
 """
 
 
-def register(model, user_name, user_password):
+def Lang(key: str, language: str = env("APP_LANGUAGE")) -> str | None | Exception:
     try:
-        model_class = model.where("name", user_name).first()
-        if model_class is None:
-
-            if required(user_name) is True and required(user_password) is True:
-
-                if validate_password(user_password) is True:
-                    password = hash_password(user_password)
-                    model.create({"name": user_name, "password": password})
-                    return True
-
-                else:
-                    return False
-            else:
-                return False
-        else:
-            return False
-
-    except AttributeError:
-        return False
-
-
-"""
-    This function is used to login user to the application
-    by calling the login function from the helpers.py file
-    validation is done in the validator.py file
-    @:param model
-    @:param user_name
-    @:param user_password
-    for example:
-    login(User, "John Doe", "Password123!")
-"""
-
-
-def login(model, user_name, user_password):
-    try:
-        model_class = model.where("name", user_name).first()
-        name = model_class.name.replace(" ", "")
-        password = model_class.password.replace(" ", "")
-
-        if name == user_name and verify_password(password=user_password, hashed_password=password) is True:
-            return True
-        else:
-            return False
-
-    except AttributeError:
-        return False
+        if key in TRANSLATIONS[language]:
+            return print(TRANSLATIONS[language][key])
+    except Exception as e:
+        return e
 
 
 """
@@ -102,7 +56,7 @@ def login(model, user_name, user_password):
 """
 
 
-def token_response(token: str):
+def token_response(token: str) -> dict[str, str] | Exception:
     return {
         "access_token": token
     }
@@ -188,14 +142,77 @@ class Bearer(HTTPBearer):
             credentials: HTTPAuthorizationCredentials = await super(Bearer, self).__call__(request)
             if credentials:
                 if not credentials.scheme == "Bearer":
-                    raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
+                    raise HTTPException(status_code=403, detail=f"{Lang('Invalid scheme')}")
                 if not verify_jwt(credentials.credentials):
-                    raise HTTPException(status_code=403, detail="Invalid token or expired token.")
+                    raise HTTPException(status_code=403, detail=f"{Lang('Invalid token')}")
                 return credentials.credentials
             else:
-                raise HTTPException(status_code=403, detail="Invalid authorization code.")
+                raise HTTPException(status_code=403, detail=f"{Lang('Invalid auth')}")
         except HTTPException as e:
             raise e
+
+
+"""
+    Password must be at least 8 characters long and contain at least one number, one uppercase and one lowercase letter
+    This function is used to add a new user to the database
+    by calling the register function from the helpers.py file
+    validation is done in the validator.py file
+    @:param model
+    @:param user_name
+    @:param user_password
+    for example:
+    register(User, "John Doe", "Password123!")
+"""
+
+
+def register(model, user_name: str, user_password: str) -> bool | Exception:
+    try:
+        model_class = model.where("name", user_name).first()
+        if model_class is None:
+
+            if required(user_name) is True and required(user_password) is True:
+
+                if validate_password(user_password) is True:
+                    password = hash_password(user_password)
+                    model.create({"name": user_name, "password": password})
+                    return True
+
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False
+
+    except AttributeError:
+        return False
+
+
+"""
+    This function is used to login user to the application
+    by calling the login function from the helpers.py file
+    validation is done in the validator.py file
+    @:param model
+    @:param user_name
+    @:param user_password
+    for example:
+    login(User, "John Doe", "Password123!")
+"""
+
+
+def login(model, user_name: str, user_password: str) -> bool | Exception:
+    try:
+        model_class = model.where("name", user_name).first()
+        name = model_class.name.replace(" ", "")
+        password = model_class.password.replace(" ", "")
+
+        if name == user_name and verify_password(password=user_password, hashed_password=password) is True:
+            return True
+        else:
+            return False
+
+    except AttributeError:
+        return False
 
 
 """TODO: Add more functions"""

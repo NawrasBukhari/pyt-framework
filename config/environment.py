@@ -18,7 +18,6 @@ from pathlib import Path
 """
 
 
-# add default parameter for the env() function
 def env(key: str, ROOT_DIR=Path(__file__).parent.parent, env_file=".env"):
     try:
         env_file = os.path.join(ROOT_DIR, env_file)
