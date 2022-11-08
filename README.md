@@ -15,7 +15,7 @@ APP_DEBUG="True"
 APP_ENVIRONMENT="development"
 
 # API credentials
-APP_KEY="233c21c49c38518d96db1b0ebd0dd16e7bd5d762b67d9f73d151c9db7d9c5934"
+APP_KEY=""
 
 # Database credentials
 DATABASE_PREFIX=""
