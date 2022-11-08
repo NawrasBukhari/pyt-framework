@@ -42,14 +42,6 @@ MAIL_FROM_NAME="PY Template"
 import os
 from pathlib import Path
 
-"""
-    @Author:        Nawras Bukhari
-    @Description:   This script is used to get the environment variables
-    @Github:        https://github.com/NawrasBukhari
-    @Date:          22/Oct/2022
-    @LastEditors:   Nawras Bukhari
-    @LastEditTime:  11/Nov/2022
-"""
 
 """
     This env() function is used to get the value of the environment variable.
@@ -59,11 +51,10 @@ from pathlib import Path
 """
 
 
-# add default parameter for the env() function
-def env(key: str, ROOT_DIR=Path(__file__).parent.parent, env_file=".env"):
+def env(key: str, ROOT_DIR=Path(__file__).parent.parent, ENV_FILE=".env"):
     try:
-        env_file = os.path.join(ROOT_DIR, env_file)
-        with open(env_file, "r") as file:
+        ENV_FILE = os.path.join(ROOT_DIR, ENV_FILE)
+        with open(ENV_FILE, "r") as file:
             lines = file.readlines()
             for line in lines:
                 if key in line:
@@ -85,12 +76,12 @@ def env(key: str, ROOT_DIR=Path(__file__).parent.parent, env_file=".env"):
 """
 
 
-def set_env(key: str, value: str, ROOT_DIR=Path(__file__).parent.parent, env_file=".env"):
+def set_env(key: str, value: str, ROOT_DIR=Path(__file__).parent.parent, ENV_FILE=".env"):
     try:
-        env_file = os.path.join(ROOT_DIR, env_file)
-        with open(env_file, "r") as file:
+        ENV_FILE = os.path.join(ROOT_DIR, ENV_FILE)
+        with open(ENV_FILE, "r") as file:
             lines = file.readlines()
-            with open(env_file, "w") as file:
+            with open(ENV_FILE, "w") as file:
                 for line in lines:
                     if key in line:
                         line = f'{key}="{value}"\n'
@@ -105,6 +96,7 @@ def set_env(key: str, value: str, ROOT_DIR=Path(__file__).parent.parent, env_fil
 
 def is_debug():
     return env("APP_DEBUG") == "True"
+
 ```
 
 # Login process
