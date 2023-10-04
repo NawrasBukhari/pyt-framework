@@ -65,7 +65,7 @@ setup(
         "cleo>=0.8.0,<0.9",
         "colorama==0.4.6",
         "customtkinter==4.6.3",
-        "Pillow==9.3.0",
+        "Pillow==10.0.1",
         "argon2-cffi~=21.3.0",
         "password-validator==1.0",
         "setuptools==65.5.1",
