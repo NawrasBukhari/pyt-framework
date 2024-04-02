@@ -70,7 +70,7 @@ setup(
         "password-validator==1.0",
         "setuptools==65.5.1",
         "flake8==5.0.4",
-        "black==22.10.0",
+        "black==24.3.0",
         "pymysql",
         "isort",
         "psycopg2-binary",
