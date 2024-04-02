@@ -77,7 +77,7 @@ setup(
         "python-dotenv==0.21.0",
         "pyodbc",
         "pendulum>=2.1,<2.2",
-        "fastapi==0.86.0",
+        "fastapi==0.109.1",
         "uvicorn==0.19.0",
         "PyJWT~=2.6.0,>=2.6.0"
     ],
